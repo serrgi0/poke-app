@@ -1,17 +1,19 @@
-import express from 'express';
-import cors from 'cors';
-import cardsRouter from './routes/card';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import express from "express";
+import compression from "compression";
+import cors from "cors";
+import cardsRouter from "./routes/card";
 
 const app = express();
-const PORT = 3000;
 
 app.use(cors());
+app.use(compression());
 app.use(express.json());
-app.use('/api/cards', cardsRouter);
 
+app.get("/api/health", (_req, res) => res.json({ ok: true }));
+
+app.use("/api/cards", cardsRouter);
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor Backend escuchando en http://localhost:${PORT}`);
+  console.log(`Backend listo en http://localhost:${PORT}`);
 });
